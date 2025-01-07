@@ -1,6 +1,6 @@
 #include "Fila.hpp"
 
-Node_F::Node_F(Paciente aux){
+Node_F::Node_F(Paciente *aux){
     this->p = aux;
     this->next = nullptr;
 }
@@ -8,14 +8,14 @@ Node_F::Node_F(Paciente aux){
 
 void Fila::Inicializa(){
     Paciente aux;  //provavelmente tirar
-    Node_F *novo = new Node_F(aux);
+    Node_F *novo = new Node_F(&aux);
     this->head->next = novo;
     this->tail->next = novo;
 }
 
 void Fila::Enfileira(){
     Paciente aux; //provavelmente tirar
-    Node_F *nova = new Node_F();
+    Node_F *nova = new Node_F(&aux);
     this->tail->next = nova;
     this->tail = nova;
     this->tamanho++;

@@ -4,10 +4,10 @@
 
 class Node_F{
     private:
-        Paciente p;
+        Paciente *p;
         Node_F *next;
     public:
-        Node_F(Paciente aux);
+        Node_F(Paciente *aux);
 
         friend class Fila;
 };

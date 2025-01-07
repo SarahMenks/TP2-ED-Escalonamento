@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <ctime>
 #include "Paciente.hpp"
 #include "Procedimento.hpp"
 #include "Escalonador.hpp"
-//#include "Fila.hpp"
+#include "Fila.hpp"
 
 using namespace std;
 
@@ -51,18 +52,11 @@ int main(int argc, char const *argv[]){
     esc.Inicializa(tam);
 
     for(int pos=0; pos < tam ; ++pos){
-        arquivo >> pacientes[pos].id >> pacientes[pos].alta >> pacientes[pos].ano >> pacientes[pos].mes >> pacientes[pos].dia >> pacientes[pos].hora >> pacientes[pos].urgencia >> pacientes[pos].medidas_hosp >> pacientes[pos].testes >> pacientes[pos].exames >> pacientes[pos].medicamentos;
+        //arquivo >> pacientes[pos].id >> pacientes[pos].alta >> pacientes[pos].ano >> pacientes[pos].mes >> pacientes[pos].dia >> pacientes[pos].hora >> pacientes[pos].urgencia >> pacientes[pos].medidas_hosp >> pacientes[pos].testes >> pacientes[pos].exames >> pacientes[pos].medicamentos;
+        
+        
         esc.CriaEvento(&pacientes[pos]);
     }
-
-    
-
-
-    arquivo.close();
-
-    return 0;
-}
-
 
 //cada procedimento vai ter uma fila
 /*
@@ -87,3 +81,14 @@ Fim
 Gerar relatórios de estatísticas
 */
 
+    
+
+
+    arquivo.close();
+
+    return 0;
+}
+
+
+//time_t t
+//cout << ctime(&t) << endl;
