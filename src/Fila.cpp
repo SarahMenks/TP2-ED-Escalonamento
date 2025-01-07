@@ -7,12 +7,14 @@ Node_F::Node_F(Paciente aux){
 
 
 void Fila::Inicializa(){
-    Node_F *novo = new Node_F();
+    Paciente aux;  //provavelmente tirar
+    Node_F *novo = new Node_F(aux);
     this->head->next = novo;
     this->tail->next = novo;
 }
 
 void Fila::Enfileira(){
+    Paciente aux; //provavelmente tirar
     Node_F *nova = new Node_F();
     this->tail->next = nova;
     this->tail = nova;
