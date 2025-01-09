@@ -1,29 +1,34 @@
 #include <iostream>
 #include "Paciente.hpp"
 
-void Paciente::Inicializa(int id, bool alta, int ano, int mes, int dia, int hora, int urgencia, int medidas_hosp, int testes, int exames, int medicamentos){
+void Patiant::Initialize(int id, bool alta, int ano, int mes, int dia, int hora, int urgencia, int medidas_hosp, int testes, int exames, int medicamentos){
     this->id = id;
-    this->alta = alta;
-    this->data->tm_year = ano;
-    this->data->tm_mon = mes;
-    this->data->tm_mday = dia;
-    this->data->tm_hour = hora;
-    this->urgencia = urgencia;
-    this->medidas_hosp = medidas_hosp;
-    this->testes = testes;
-    this->exames = exames;
-    this->medicamentos = medicamentos;
-    this->estado = estado;
+    this->discharge = alta;
+    this->date->tm_year = ano;
+    this->date->tm_mon = mes;
+    this->date->tm_mday = dia;
+    this->date->tm_hour = hora;
+    this->urgency = urgencia;
+    this->hosp_mesures = medidas_hosp;
+    this->tests = testes;
+    this->exams = exames;
+    this->medications = medicamentos;
+    this->status= status;
 };	
 
-void Paciente::Imprime(){
+void Patiant::Print(){
     std::cout << "ID: " << this->id << std::endl;
-    std::cout << "Alta: " << this->alta << std::endl;
-    std::cout << "Ano: " << this->ano << std::endl;
-    std::cout << "Mes: " << this->mes << std::endl;
-    std::cout << "Dia: " << this->dia << std::endl;
-    std::cout << "Hora: " << this->hora << std::endl;
+    std::cout << "Alta: " << this->discharge << std::endl;
+    std::cout << "Ano: " << this->date->tm_year << std::endl;
+    std::cout << "Mes: " << this->date->tm_mon << std::endl;
+    std::cout << "Dia: " << this->date->tm_mday << std::endl;
+    std::cout << "Hora: " << this->date->tm_hour << std::endl;
 }
+
+struct tm Patiant::GetPatiantTime(int id){
+    return *this->date;
+}
+
 
 /*quais e quantos procedimentos deve realizar, estado atual e as estatísticas de atendimento do paciente*/
 //COlcoar int tempo na fila?

@@ -1,23 +1,24 @@
-#ifndef PACIENTE_HPP
-#define PACIENTE_HPP
+#ifndef PATIANT_HPP
+#define PATIANT_HPP
 
 #include <ctime>
 
-struct Paciente{
+struct Patiant{
         int id;
-        bool alta;
-        struct tm *data;
-        int urgencia; //0 a 2
-        int medidas_hosp;
-        int testes;
-        int exames;
-        int medicamentos;
-        int estado = 0; //vai de 0 a 13 (1 a 14)
-        float tempo_fila, tempo_atendimento, tempo_ocioso; //paciente tem tempo ocioso?
+        bool discharge;
+        struct tm *date;
+        int urgency; //0 a 2
+        int hosp_mesures;
+        int tests;
+        int exams;
+        int medications;
+        int status = 0; //vai de 0 a 13 (1 a 14)
+        float queue_time, treatment_time, idle_time; //paciente tem tempo ocioso?
 
-        void Inicializa(int id, bool alta, int ano, int mes, int dia, int hora, int urgencia, int medidas_hosp, int testes, int exames, int medicamentos);
+        void Initialize(int id, bool discharge, int year, int month, int day, int hour, int urgency, int hosp_mesures, int tests, int exams, int medications);
+        struct tm GetPatiantTime(int id);
 
-        void Imprime();
+        void Print();
 };
 
 /*quais e quantos procedimentos deve realizar, estado atual e as estatísticas de atendimento do paciente*/

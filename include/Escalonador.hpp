@@ -2,37 +2,37 @@
 #define ESCALONADOR_HPP
 #include "Paciente.hpp"
 #include <fstream>
+#include <ctime>
 
-struct Evento{
-    int ano, mes, dia;
-    float hora;
-    int estado; //0 ao 13
-    Paciente *p;
+struct Event{
+    int year, month, day; //use ctime?
+    float hour;
+    Patiant *p;
 
-    Evento();
-    Evento(Paciente *temp);
+    Event();
+    Event(Patiant *temp);
 
-    bool operator < (Evento &e) const{
-        return (this->ano <= e.ano, this->mes<= e.mes, this->dia <= e.dia && this->hora < e.hora);
+    bool operator < (Event &e) const{
+        return (this->year <= e.year, this->month<= e.month, this->day <= e.day && this->hour < e.hour);
     }
 };
 
-class Escalonador{
+class Scheduler{
     private:
-        Evento *heap;
-        int tamanho;
-        void HeapfyPorBaixo(int posicao);
-        void HeapfyPorCima(int posicao); 
+        Event *heap;
+        int size;
+        void LowHeapfy(int position);
+        void HighHeapfy(int position); 
 
     public:
-        void CriaEvento(Paciente *temp);
-        void Inicializa(int maxsize);
-        void InsereEvento(Evento evento);
-        Evento RetiraProximoEvento();
-        int GetAncestral(int posicao); 
-        int GetSucessorEsq(int posicao);
-        int GetSucessorDir(int posicao);
-        void Finaliza();
+        void CreateEvent(Patiant *temp);
+        void Initialize(int maxsize);
+        void InsertEvent(Event Event);
+        Event RemoveNext();
+        int GetParent(int posicao); 
+        int GetLeftSucessor(int position);
+        int GetRightSucessor(int position);
+        void Finalize();
 };
 
 #endif

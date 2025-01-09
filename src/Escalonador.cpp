@@ -1,98 +1,96 @@
 #include "Escalonador.hpp"
 
-Evento::Evento(){
+Event::Event(){
     this->p = nullptr;
-    this->ano = 0;
-    this->mes = 0;
-    this->dia = 0;
-    this->hora = 0;
-    this->estado = 0;
+    this->year = 0;
+    this->month = 0;
+    this->day = 0;
+    this->hour = 0;
 }
 
-Evento::Evento(Paciente *temp){
+Event::Event(Patiant *temp){
     this->p = temp;
-    this->ano = temp->ano;
-    this->mes = temp->mes;
-    this->dia = temp->dia;
-    this->hora = temp->hora;
-    this->estado = 0;
+    this->year = temp->date->tm_year;
+    this->month = temp->date->tm_mon;
+    this->day = temp->date->tm_mday;
+    this->hour = temp->date->tm_hour;
 }
 
-void Escalonador::Inicializa(int maxsize){
-    this->heap = new Evento[maxsize];
-    this->tamanho = 0;
+void Scheduler::Initialize(int maxsize){
+    this->heap = new Event[maxsize];
+    this->size = 0;
 }
 
-void Escalonador::CriaEvento(Paciente *temp){
-    Evento novo(temp);
-    InsereEvento(novo);
+void Scheduler::CreateEvent(Patiant *temp){
+    Event new_event(temp);
+    InsertEvent(new_event);
 }
 
-void Escalonador::InsereEvento(Evento e){
-    this->heap[this->tamanho] = e;
-    this->tamanho++;
-    HeapfyPorBaixo(this->tamanho-1);    
+void Scheduler::InsertEvent(Event e){
+    this->heap[this->size] = e;
+    this->size++;
+    LowHeapfy(this->size-1);    
 }
 
-Evento Escalonador::RetiraProximoEvento(){
-    Evento aux = this->heap[0];
-    this->heap[0] = this->heap[this->tamanho-1];
-    this->tamanho--;
-    HeapfyPorCima(0);
+Event Scheduler::RemoveNext(){
+    Event aux = this->heap[0];
+    this->heap[0] = this->heap[this->size-1];
+    this->size--;
+    HighHeapfy(0);
     return aux;
 }
 
-int Escalonador::GetAncestral(int posicao){
-    return (posicao-1)/2;
+int Scheduler::GetParent(int position){
+    return (position-1)/2;
 }
 
-int Escalonador::GetSucessorEsq(int posicao){
-    return (posicao*2)+1;
+int Scheduler::GetLeftSucessor(int position){
+    return (position*2)+1;
 }
 
-int Escalonador::GetSucessorDir(int posicao){
-    return (posicao*2)+2;
+int Scheduler::GetRightSucessor(int position){
+    return (position*2)+2;
 }
 
-void Escalonador::HeapfyPorBaixo(int posicao){
-    if(posicao == 0)
+void Scheduler::LowHeapfy(int position){
+    if(position == 0)
         return;
 
-    int posicao_pai = GetAncestral(posicao);
-    //se o evento pai tiver um paciente com maior urgencia, mantes
-    if(this->heap[posicao_pai].p->urgencia < this->heap[posicao].p->urgencia){
+    int position_parent = GetParent(position);
+    //se o evento parent tiver um paciente com maior urgencia, mantes
+    if(this->heap[position_parent].p->urgency < this->heap[position].p->urgency){
         return;
     }   
     //se o filho tiver maior urgencia ou o menor tempo, troca
-    else if(this->heap[posicao].p->urgencia < this->heap[posicao_pai].p->urgencia || this->heap[posicao] < this->heap[posicao_pai]){
-        Evento aux = this->heap[posicao];
-        this->heap[posicao] = this->heap[posicao_pai];
-        this->heap[posicao_pai] = aux;
-        HeapfyPorBaixo(posicao_pai);
+    else if(this->heap[position].p->urgency < this->heap[position_parent].p->urgency || this->heap[position] < this->heap[position_parent]){
+        Event aux = this->heap[position];
+        this->heap[position] = this->heap[position_parent];
+        this->heap[position_parent] = aux;
+        LowHeapfy(position_parent);
     }
 }
 
-void Escalonador::HeapfyPorCima(int posicao){
-    int esq = GetSucessorEsq(posicao);
-    int dir = GetSucessorDir(posicao);
-    int pos_menor = posicao;
+void Scheduler::HighHeapfy(int position){
+    int esq = GetLeftSucessor(position);
+    int dir = GetRightSucessor(position);
+    int pos_menor = position;
 
-    if((dir < this->tamanho) && (this->heap[dir] < this->heap[pos_menor]) && (this->heap[dir] < this->heap[esq]) && (this->heap[dir].p->urgencia > this->heap[pos_menor].p->urgencia))
+    if((dir < this->size) && (this->heap[dir] < this->heap[pos_menor]) && (this->heap[dir] < this->heap[esq]) && (this->heap[dir].p->urgency > this->heap[pos_menor].p->urgency))
         pos_menor = dir;
     
-    if((esq < this->tamanho) && (this->heap[esq] < this->heap[pos_menor]) && (this->heap[esq] < this->heap[dir]) && (this->heap[esq].p->urgencia > this->heap[pos_menor].p->urgencia))
+    if((esq < this->size) && (this->heap[esq] < this->heap[pos_menor]) && (this->heap[esq] < this->heap[dir]) && (this->heap[esq].p->urgency > this->heap[pos_menor].p->urgency))
         pos_menor = esq;
 
-    if(pos_menor != posicao){
-        Evento aux = this->heap[posicao];
-        this->heap[posicao] = this->heap[pos_menor];
+    if(pos_menor != position){
+        Event aux = this->heap[position];
+        this->heap[position] = this->heap[pos_menor];
         this->heap[pos_menor] = aux; //talvez nao saiba copiar pacientes
 
-        HeapfyPorCima(pos_menor);
+        HighHeapfy(pos_menor);
     }
 }
 
-void Escalonador::Finaliza(){
+void Scheduler::Finalize(){
 //Gerar estatisticas
 }
 

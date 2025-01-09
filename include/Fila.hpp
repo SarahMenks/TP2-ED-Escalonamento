@@ -1,30 +1,30 @@
-#ifndef FILA_HPP
-#define FILA_HPP
+#ifndef QUEUE_HPP
+#define QUEUE_HPP
 #include "Paciente.hpp"
 
 class Node_F{
     private:
-        Paciente *p;
+        Patiant *p; //change to "int id"
         Node_F *next;
     public:
-        Node_F(Paciente *aux);
+        Node_F(Patiant *aux);
 
-        friend class Fila;
+        friend class Queue;
 };
 
-class Fila{
+class Queue{
     private:
         Node_F *head;
         Node_F *tail;
-        int tamanho;
-        int tempo_espera;
+        int size;
+        int wait_time;
 
     public:
-        void Inicializa();
-        void Enfileira();
-        void Desenfileira(); //talvez mudar o tipo para retornar o valor do elemento retirado?
-        void FilaVazia();
-        void Finaliza();
+        void Initialize();
+        void Enqueue();
+        void Dequeue(); //talvez mudar o tipo para retornar o valor do elemento retirado?
+        void EmptyQueue();
+        void Finalize();
 };
 
 #endif
