@@ -1,6 +1,6 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
-#include "Paciente.hpp"
+#include "Patiant.hpp"
 
 class Node_F{
     private:

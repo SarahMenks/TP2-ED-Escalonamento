@@ -1,19 +1,18 @@
 #ifndef ESCALONADOR_HPP
 #define ESCALONADOR_HPP
-#include "Paciente.hpp"
+#include "Patiant.hpp"
 #include <fstream>
 #include <ctime>
 
 struct Event{
-    int year, month, day; //use ctime?
-    float hour;
+    struct tm *event_date;
     Patiant *p;
 
     Event();
     Event(Patiant *temp);
 
     bool operator < (Event &e) const{
-        return (this->year <= e.year, this->month<= e.month, this->day <= e.day && this->hour < e.hour);
+        return (this->event_date < e.event_date);
     }
 };
 

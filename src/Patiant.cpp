@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Paciente.hpp"
+#include "Patiant.hpp"
 
 void Patiant::Initialize(int id, bool alta, int ano, int mes, int dia, int hora, int urgencia, int medidas_hosp, int testes, int exames, int medicamentos){
     this->id = id;

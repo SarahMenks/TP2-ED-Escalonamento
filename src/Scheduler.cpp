@@ -1,19 +1,13 @@
-#include "Escalonador.hpp"
+#include "Scheduler.hpp"
 
 Event::Event(){
     this->p = nullptr;
-    this->year = 0;
-    this->month = 0;
-    this->day = 0;
-    this->hour = 0;
+    this->event_date = 0;
 }
 
 Event::Event(Patiant *temp){
     this->p = temp;
-    this->year = temp->date->tm_year;
-    this->month = temp->date->tm_mon;
-    this->day = temp->date->tm_mday;
-    this->hour = temp->date->tm_hour;
+    this->event_date = p->date;
 }
 
 void Scheduler::Initialize(int maxsize){
