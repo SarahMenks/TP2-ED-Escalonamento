@@ -1,37 +1,37 @@
-#include "Fila.hpp"
+#include "Queue.hpp"
 
-Node_F::Node_F(Paciente *aux){
+Node_F::Node_F(Patiant *aux){
     this->p = aux;
     this->next = nullptr;
 }
 
 
-void Fila::Inicializa(){
-    Paciente aux;  //provavelmente tirar
+void Queue::Initialize(){
+    Patiant aux;  //provavelmente tirar
     Node_F *novo = new Node_F(&aux);
     this->head->next = novo;
     this->tail->next = novo;
 }
 
-void Fila::Enfileira(){
-    Paciente aux; //provavelmente tirar
+void Queue::Enqueue(){
+    Patiant aux; //provavelmente tirar
     Node_F *nova = new Node_F(&aux);
     this->tail->next = nova;
     this->tail = nova;
-    this->tamanho++;
+    this->size++;
 }
 
-void Fila::Desenfileira(){
-    if (this->tamanho == 0)
+void Queue::Dequeue(){
+    if (this->size == 0)
         throw "Fila está vazia!";
 
     //int item = aux->id;
     Node_F *aux = this->head;
     this->head = head->next;
     delete aux;
-    this->tamanho--;
+    this->size--;
     //return item;
 }
 
-void Fila::FilaVazia(){}
-void Fila::Finaliza(){}
+void Queue::EmptyQueue(){}
+void Queue::Finalize(){}
