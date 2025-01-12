@@ -37,6 +37,7 @@ int main(int argc, char const *argv[]){
         cout << "Cannot open file" << endl;
         exit(1);
     }
+    
 
     InitializeProcedures(file, triagem, atendimento, medhosp, teste, exame, medic);
     
