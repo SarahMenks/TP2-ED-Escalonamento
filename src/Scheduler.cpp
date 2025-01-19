@@ -7,7 +7,16 @@ Event::Event(){
 
 Event::Event(Patiant *temp){
     this->p = temp;
-    this->event_date = p->date;
+    this->event_date = p->out_date;
+}
+
+Scheduler::Scheduler(){
+    this->heap = nullptr;
+    this->size = 0;
+}
+
+Scheduler::~Scheduler(){
+    delete this->heap;
 }
 
 void Scheduler::Initialize(int maxsize){
@@ -26,12 +35,15 @@ void Scheduler::InsertEvent(Event e){
     LowHeapfy(this->size-1);    
 }
 
-Event Scheduler::RemoveNext(){
+Patiant* Scheduler::RemoveNext(){
+    if(this->size == 0)
+        throw "Heap vazio!";
+    
     Event aux = this->heap[0];
     this->heap[0] = this->heap[this->size-1];
     this->size--;
     HighHeapfy(0);
-    return aux;
+    return aux.p;
 }
 
 int Scheduler::GetParent(int position){
@@ -84,8 +96,16 @@ void Scheduler::HighHeapfy(int position){
     }
 }
 
-void Scheduler::Finalize(){
+void Scheduler::ShowStatistics(){
 //Gerar estatisticas
+}
+
+bool Scheduler::isEmpty(){
+    return this->size == 0;
+}
+
+struct tm Scheduler::GetNextTime(){
+    return *this->heap[0].event_date;
 }
 
 /*

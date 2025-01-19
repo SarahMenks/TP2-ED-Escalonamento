@@ -4,7 +4,7 @@ SRC_DIR=src
 INCLUDE_DIR=include
 OBJ_DIR=obj
 BIN_DIR=bin
-EXECUTABLE=$(BIN_DIR)/pa8
+EXECUTABLE=$(BIN_DIR)/tp2.out
 
 SRC_FILES:=$(wildcard $(SRC_DIR)/*.cpp)
 

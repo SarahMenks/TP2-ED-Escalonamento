@@ -24,14 +24,20 @@ class Scheduler{
         void HighHeapfy(int position); 
 
     public:
-        void CreateEvent(Patiant *temp);
+        Scheduler();
+        ~Scheduler();
+
         void Initialize(int maxsize);
+        void CreateEvent(Patiant *temp);
         void InsertEvent(Event Event);
-        Event RemoveNext();
+        Patiant* RemoveNext();
         int GetParent(int posicao); 
         int GetLeftSucessor(int position);
         int GetRightSucessor(int position);
-        void Finalize();
+        
+        void ShowStatistics();
+        bool isEmpty();
+        struct tm GetNextTime();
 };
 
 #endif

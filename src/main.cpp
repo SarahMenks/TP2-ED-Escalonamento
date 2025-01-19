@@ -1,9 +1,37 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
-#include "System.hpp"
+#include "Patiant.hpp"
+#include "Procedure.hpp"
+#include "Scheduler.hpp"
+#include "Queue.hpp"
 
 using namespace std;
+/*
+
+void InitializeProcedures(ifstream &file, System *H){
+    float time;
+    int quant;
+    
+    file >> time >> quant;
+    H->SetTriagem(time, quant);
+    
+    file >> time >> quant;
+    H->SetAtendimento(time, quant);
+
+    file >> time >> quant;
+    H->SetMedHosp(time, quant);
+    
+    file >> time >> quant;
+    H->SetTeste(time, quant);
+
+    file >> time >> quant;
+    H->SetExame(time, quant);
+
+    file >> time >> quant;
+    H->SetMedic(time, quant);
+}
+*/
 
 void InitializeProcedures(ifstream &file, Procedure &triagem, Procedure &atendimento, Procedure &medhosp, Procedure &teste, Procedure &exame, Procedure &medic){
     float time;
@@ -28,30 +56,61 @@ void InitializeProcedures(ifstream &file, Procedure &triagem, Procedure &atendim
     medic.Inicialize(time, quant);
 }
 
+void InitializePatiants(ifstream &file, Patiant *pacientes, int size){
+    for(int pos=0; pos < size ; ++pos){
+        file >> pacientes[pos].id >> pacientes[pos].discharge >> pacientes[pos].entry_date->tm_year >> pacientes[pos].entry_date->tm_mon >> pacientes[pos].entry_date->tm_mday >> pacientes[pos].entry_date->tm_hour >> pacientes[pos].urgency >> pacientes[pos].num_hosp_mesures >> pacientes[pos].num_tests >> pacientes[pos].num_exams >> pacientes[pos].num_medications;
+    }
+}
+
+void CheckAndEnqueue(Patiant *p, Queue &high, Queue &medium, Queue &low){
+    if(p->urgency == LOW_PRIORITY)
+        low.Enqueue(p);
+
+    else if(p->urgency == MEDIUM_PRIORITY)
+        medium.Enqueue(p);
+    
+    else if(p->urgency == HIGH_PRIORITY)
+        high.Enqueue(p);
+}
+
 int main(int argc, char const *argv[]){
+    //cria as variaveis do sistema
+    //System s_hospital;
+    Procedure triagem, atendimento, medhosp, teste, exame, medic;
+    Scheduler escalonador;
+    Queue high, medium, low;
+    int num_patiants;
+    struct tm system_time;
 
-    System S_Hospital;
-
-    ifstream file(argv[1]);
+    ifstream file("teste.csv");
     if (!(file.is_open())){
         cout << "Cannot open file" << endl;
         exit(1);
     }
-    
 
     InitializeProcedures(file, triagem, atendimento, medhosp, teste, exame, medic);
     
     //registra pacientes
-    int tam;
-    file >> tam;
-    Patiant *patiants = new Patiant[tam];
-    esc.Initialize(tam);
+    file >> num_patiants;
+    Patiant *patiants = new Patiant[num_patiants];
+    InitializePatiants(file, patiants, num_patiants);
+    
+    //Escalona a chegada de pacientes
+    for(int i = 0 ; i < num_patiants ; i++){
+        escalonador.CreateEvent(&patiants[i]);
+    }
 
-    for(int pos=0; pos < tam ; ++pos){
-        //file >> pacientes[pos].id >> pacientes[pos].alta >> pacientes[pos].ano >> pacientes[pos].mes >> pacientes[pos].dia >> pacientes[pos].hora >> pacientes[pos].urgencia >> pacientes[pos].medidas_hosp >> pacientes[pos].testes >> pacientes[pos].exames >> pacientes[pos].medicamentos;
+    while(!(escalonador.isEmpty() && high.isEmpty() && medium.isEmpty() && low.isEmpty())){
+        Patiant *p = escalonador.RemoveNext();
+        system_time = escalonador.GetNextTime();
+
+        while(p->status == DISCHARGE){
+            p->Print();
+            //delete p;
+            p = escalonador.RemoveNext();
+        }
         
-        
-        esc.CreateEvent(&patiants[pos]);
+        CheckAndEnqueue(p, high, medium, low);
     }
 
 //cada Procedure vai ter uma fila
@@ -88,3 +147,5 @@ Gerar relatórios de estatísticas
 
 //time_t t
 //cout << ctime(&t) << endl;
+
+//todos passam pela triagem

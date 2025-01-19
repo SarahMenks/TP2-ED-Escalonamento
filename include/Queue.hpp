@@ -4,7 +4,7 @@
 
 class Node_F{
     private:
-        Patiant *p; //change to "int id"
+        Patiant *p; //change to "int id"?
         Node_F *next;
     public:
         Node_F(Patiant *aux);
@@ -21,9 +21,9 @@ class Queue{
 
     public:
         void Initialize();
-        void Enqueue();
+        void Enqueue(Patiant *p);
         void Dequeue(); //talvez mudar o tipo para retornar o valor do elemento retirado?
-        void EmptyQueue();
+        bool isEmpty();
         void Finalize();
 };
 

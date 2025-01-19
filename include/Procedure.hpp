@@ -2,9 +2,10 @@
 #define PROCEDIMENTO_HPP
 
 struct Unit{
+    bool full;
     float occupied_time;
     float idle_time;
-    float fim_atendimento;
+    float service_ended;
 };
 
 class Procedure{
@@ -14,6 +15,8 @@ class Procedure{
         Unit* units;
     
     public:
+        Procedure();
+        ~Procedure();
         void Inicialize(float t, int quant);
         void UpdateIdle(int num, float time);
 };
