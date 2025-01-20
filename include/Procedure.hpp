@@ -1,8 +1,10 @@
 #ifndef PROCEDIMENTO_HPP
 #define PROCEDIMENTO_HPP
 
+#include <Patiant.hpp>
+
 struct Unit{
-    bool full;
+    bool isEmpty;
     float occupied_time;
     float idle_time;
     float service_ended;
@@ -11,7 +13,7 @@ struct Unit{
 class Procedure{
     private:
         float duration;
-        int quant_units;
+        int num_units;
         Unit* units;
     
     public:
@@ -19,6 +21,7 @@ class Procedure{
         ~Procedure();
         void Inicialize(float t, int quant);
         void UpdateIdle(int num, float time);
+        void PerformProcedure(Patiant *p);
 };
 //registrar a utilização de cada unidade de cada procedimento
 //e/ou seu tempo ocioso. 

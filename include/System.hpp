@@ -15,8 +15,8 @@ class System{
     public:
         // void InitializeProcedures(triagem, atendimento, medhosp, teste, exame, medic);
 
-        System();
-        ~System();
+        // System();
+        // ~System();
 
         void InitializeScheduler(Patiant *p, int num_patiants);
         bool ProgramEnded();
