@@ -47,8 +47,8 @@ void Patiant::Print(){
     std::mktime(this->entry_date);
     std::mktime(this->out_date);
     std::cout << this->id << " "
-              << asctime(this->entry_date) << " "
-              << asctime(this->out_date) << " "
+              << asctime(this->entry_date)
+              << asctime(this->out_date)
               << total_time << " "
               << time_in_treatment << " "
               << time_in_queue << std::endl;
@@ -60,7 +60,7 @@ struct tm Patiant::GetPatiantTime(int id){
     return *this->out_date;
 }
 
- int Patiant::GetQuantProcedure(){
+ int Patiant::GetProcedureTime(){
     //Funcao que retorna quantas vezes o paciente deve realizar o procedimento
     switch (this->status){
         case TRIAGE:
@@ -80,6 +80,7 @@ struct tm Patiant::GetPatiantTime(int id){
             return 0;
     }
  }
+
 
 
 /*quais e quantos procedimentos deve realizar, estado atual e as estatísticas de atendimento do paciente*/

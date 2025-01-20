@@ -37,14 +37,14 @@ struct Patiant{
         int num_exams;
         int num_medications;
         int status = 0; //vai de 0 a 13 (Status)
-        float time_in_queue, time_in_treatment, total_time; 
+        double time_in_queue, time_in_treatment, total_time; 
 
         Patiant();
         ~Patiant();
         //void Initialize(int id, bool discharge, int year, int month, int day, int hour, int urgency, int hosp_mesures, int tests, int exams, int medications);
         void ConfigDate(int month, int year);
         struct tm GetPatiantTime(int id);
-        int GetQuantProcedure();
+        int GetProcedureTime();
 
         void Print();
 };

@@ -79,13 +79,13 @@ void CheckAndEnqueue(Patiant *p, Queue &high, Queue &medium, Queue &low){
 //Só se precisar
 void CheckAndDequeue(Patiant *p, Queue &high, Queue &medium, Queue &low){
     if(p->urgency == LOW_PRIORITY)
-        low.Dequeue();
+        low.Remove();
 
     else if(p->urgency == MEDIUM_PRIORITY)
-        medium.Dequeue();
+        medium.Remove();
     
     else if(p->urgency == HIGH_PRIORITY)
-        high.Dequeue();
+        high.Remove();
 }
 
 void PrintStatistics(Patiant *p, int num_patiants){
@@ -93,6 +93,36 @@ void PrintStatistics(Patiant *p, int num_patiants){
     for(int i = 0 ; i < num_patiants ; i++){
         p[i].Print();
     }
+}
+
+void ProcessQueue(Queue &queue, Procedure &procedure, Scheduler &escalonador, double &system_time){
+    //passa pela fila de atendimento
+    if(queue.isEmpty()){
+        cout << "Fila vazia" << endl;
+        return;
+    }
+    else{
+
+        while(!queue.isEmpty()){
+            Patiant *p = nullptr;
+            try{
+                p = queue.Remove();
+            } catch(const char* msg) {cerr << msg << endl; continue;}
+
+            p->time_in_queue = system_time - p->out_date->tm_hour;
+            
+            try {
+                if(procedure.FindEmptyUnit() != -1){
+                    procedure.PerformProcedure(p);
+                    system_time = p->out_date->tm_hour;
+                }
+                procedure.CheckServiceEnded(system_time);
+            } catch(const char* msg) {
+                cerr << msg << endl;
+                continue;
+            }
+        }
+    } 
 }
 
 int main(int argc, char const *argv[]){
@@ -107,7 +137,8 @@ int main(int argc, char const *argv[]){
     Procedure triagem, atendimento, medhosp, teste, exame, medic;
     Queue high, medium, low;
     int num_patiants;
-    struct tm system_time;
+    double system_time = 0;
+
 
     InitializeProcedures(file, triagem, atendimento, medhosp, teste, exame, medic);
     
@@ -116,25 +147,22 @@ int main(int argc, char const *argv[]){
     Patiant *patiants = new Patiant[num_patiants]();
     Scheduler escalonador(num_patiants);
 
-
     InitializePatiants(file, patiants, num_patiants);
+    system_time = mktime(patiants[0].entry_date);
+
+    //fila de triagem por ordem de chegada, ja que a prioridade é definida depois
+    for(int i = 0 ; i < num_patiants ; i++){
+        high.Enqueue(&patiants[i]);
+    }
+    
+    ProcessQueue(high, triagem, escalonador, system_time);
 
     //Escalona a chegada de pacientes (cria os eventos)
     for(int i = 0 ; i < num_patiants ; i++){
         escalonador.CreateEvent(&patiants[i]);
     }
 
-    for(int i = 0 ; i < num_patiants ; i++){
-        escalonador.RemoveNext()->Print();
-    }
-
-    // PrintStatistics(patiants, num_patiants);
-
-    // //passa para a fila de triagem
-    // for(int i = 0 ; i < num_patiants ; i++){
-    //     triagem.PerformProcedure(escalonador.RemoveNext());
-    // }
-
+    PrintStatistics(patiants, num_patiants);
 
     // //passa pela fila de atendimento
     // for(int i = 0 ; i < num_patiants ; i++){
@@ -160,6 +188,12 @@ int main(int argc, char const *argv[]){
     //     CheckAndEnqueue(p, high, medium, low);
     // }
 
+
+    file.close();
+
+    return 0;
+}
+
 //cada Procedure vai ter uma fila
 /*
 Inicializa Condição de Término para FALSO
@@ -182,15 +216,3 @@ Enquanto houver eventos ou filas não vazias
 Fim 
 Gerar relatórios de estatísticas
 */
-
-    
-
-
-    file.close();
-
-    return 0;
-}
-
-
-//time_t t
-//cout << ctime(&t) << endl;

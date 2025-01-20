@@ -6,29 +6,40 @@ Node_F::Node_F(Patiant *aux){
 }
 
 void Queue::Initialize(){
-    Patiant aux;  //provavelmente tirar
-    Node_F *novo = new Node_F(&aux);
-    this->head->next = novo;
-    this->tail->next = novo;
+    this->head = nullptr;
+    this->tail = nullptr;
+    this->size = 0;
 }
 
 void Queue::Enqueue(Patiant *p){
     Node_F *nova = new Node_F(p);
-    this->tail->next = nova;
-    this->tail = nova;
+    if(this->size == 0){
+        this->head = nova;
+        this->tail = nova;
+    }
+    else{
+        this->tail->next = nova;
+        this->tail = nova;
+    }
     this->size++;
 }
 
-void Queue::Dequeue(){
+Patiant* Queue::Remove(){
     if (this->size == 0)
         throw "Fila está vazia!";
 
-    //int item = aux->id;
     Node_F *aux = this->head;
     this->head = head->next;
-    delete aux;
     this->size--;
-    //return item;
+
+    if (this->size == 0){
+        this->tail = nullptr; // Atualiza tail quando a fila se torna vazia
+    }
+
+    Patiant* patiant = aux->p;
+    delete aux;  
+
+    return patiant;
 }
 
 bool Queue::isEmpty(){

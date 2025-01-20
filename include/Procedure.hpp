@@ -22,6 +22,9 @@ class Procedure{
         void Inicialize(float t, int quant);
         void UpdateIdle(int num, float time);
         void PerformProcedure(Patiant *p);
+        int FindEmptyUnit();
+        int GetTime();
+        void CheckServiceEnded(double const &time);
 };
 //registrar a utilização de cada unidade de cada procedimento
 //e/ou seu tempo ocioso. 
