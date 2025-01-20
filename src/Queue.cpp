@@ -5,7 +5,6 @@ Node_F::Node_F(Patiant *aux){
     this->next = nullptr;
 }
 
-
 void Queue::Initialize(){
     Patiant aux;  //provavelmente tirar
     Node_F *novo = new Node_F(&aux);
@@ -13,9 +12,8 @@ void Queue::Initialize(){
     this->tail->next = novo;
 }
 
-void Queue::Enqueue(){
-    Patiant aux; //provavelmente tirar
-    Node_F *nova = new Node_F(&aux);
+void Queue::Enqueue(Patiant *p){
+    Node_F *nova = new Node_F(p);
     this->tail->next = nova;
     this->tail = nova;
     this->size++;
@@ -33,5 +31,7 @@ void Queue::Dequeue(){
     //return item;
 }
 
-void Queue::EmptyQueue(){}
+bool Queue::isEmpty(){
+    return size == 0; 
+}
 void Queue::Finalize(){}

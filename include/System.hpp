@@ -9,24 +9,25 @@
 class System{
     private:
         Procedure triagem, atendimento, medhosp, teste, exame, medic;
-        Scheduler esc;
+        Scheduler escalonador;
         Queue high, medium, low;
 
     public:
-        void InitializeProcedures(triagem, atendimento, medhosp, teste, exame, medic);
+        // void InitializeProcedures(triagem, atendimento, medhosp, teste, exame, medic);
+
+        // System();
+        // ~System();
+
+        void InitializeScheduler(Patiant *p, int num_patiants);
+        bool ProgramEnded();
 
 
-       //Acho q isso aqui ja é a funcao do inicializeprocedures 
-        // void SetTriagem();
-        // void SetAtendimento();
-        // void SetMedHosp();
-        // void SetTeste();
-        // void SetExame();
-        // void SetMedic();
-
-
-
-
+        void SetTriagem(float time, int quant);
+        void SetAtendimento(float time, int quant);
+        void SetMedHosp(float time, int quant);
+        void SetTeste(float time, int quant);
+        void SetExame(float time, int quant);
+        void SetMedic(float time, int quant);
 };
 
 

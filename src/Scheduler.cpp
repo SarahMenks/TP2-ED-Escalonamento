@@ -1,18 +1,22 @@
 #include "Scheduler.hpp"
 
 Event::Event(){
-    this->p = nullptr;
+    this->patiant = nullptr;
     this->event_date = 0;
 }
 
 Event::Event(Patiant *temp){
-    this->p = temp;
-    this->event_date = p->date;
+    this->patiant = temp;
+    this->event_date = patiant->out_date;
 }
 
-void Scheduler::Initialize(int maxsize){
+Scheduler::Scheduler(int maxsize){
     this->heap = new Event[maxsize];
     this->size = 0;
+}
+
+Scheduler::~Scheduler(){
+    delete[] this->heap;
 }
 
 void Scheduler::CreateEvent(Patiant *temp){
@@ -26,12 +30,15 @@ void Scheduler::InsertEvent(Event e){
     LowHeapfy(this->size-1);    
 }
 
-Event Scheduler::RemoveNext(){
+Patiant* Scheduler::RemoveNext(){
+    if(this->size == 0)
+        throw "Heap vazio!";
+    
     Event aux = this->heap[0];
     this->heap[0] = this->heap[this->size-1];
     this->size--;
     HighHeapfy(0);
-    return aux;
+    return aux.patiant;
 }
 
 int Scheduler::GetParent(int position){
@@ -51,12 +58,12 @@ void Scheduler::LowHeapfy(int position){
         return;
 
     int position_parent = GetParent(position);
-    //se o evento parent tiver um paciente com maior urgencia, mantes
-    if(this->heap[position_parent].p->urgency < this->heap[position].p->urgency){
+    //se o evento parent tiver um paciente com maior urgencia, mantem
+    if(this->heap[position_parent].patiant->urgency > this->heap[position].patiant->urgency){
         return;
     }   
     //se o filho tiver maior urgencia ou o menor tempo, troca
-    else if(this->heap[position].p->urgency < this->heap[position_parent].p->urgency || this->heap[position] < this->heap[position_parent]){
+    else if(this->heap[position] < this->heap[position_parent]){
         Event aux = this->heap[position];
         this->heap[position] = this->heap[position_parent];
         this->heap[position_parent] = aux;
@@ -69,11 +76,11 @@ void Scheduler::HighHeapfy(int position){
     int dir = GetRightSucessor(position);
     int pos_menor = position;
 
-    if((dir < this->size) && (this->heap[dir] < this->heap[pos_menor]) && (this->heap[dir] < this->heap[esq]) && (this->heap[dir].p->urgency > this->heap[pos_menor].p->urgency))
-        pos_menor = dir;
-    
-    if((esq < this->size) && (this->heap[esq] < this->heap[pos_menor]) && (this->heap[esq] < this->heap[dir]) && (this->heap[esq].p->urgency > this->heap[pos_menor].p->urgency))
+    if((esq < this->size) && (this->heap[esq] < this->heap[pos_menor]) && (this->heap[esq] < this->heap[dir]))
         pos_menor = esq;
+
+    if((dir < this->size) && (this->heap[dir] < this->heap[pos_menor]) && (this->heap[dir] < this->heap[esq]))
+        pos_menor = dir;
 
     if(pos_menor != position){
         Event aux = this->heap[position];
@@ -84,8 +91,16 @@ void Scheduler::HighHeapfy(int position){
     }
 }
 
-void Scheduler::Finalize(){
+void Scheduler::ShowStatistics(){
 //Gerar estatisticas
+}
+
+bool Scheduler::isEmpty(){
+    return this->size == 0;
+}
+
+struct tm Scheduler::GetNextTime(){
+    return *this->heap[0].event_date;
 }
 
 /*

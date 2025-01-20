@@ -9,7 +9,7 @@
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/home/sarahmenks/TP2/TP2-Escalonamento",
-      "program": "/home/sarahmenks/TP2/TP2-Escalonamento/build/Debug/outDebug",
+      "program": "${fileDirname}/${fileBasenameNoExtension}",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
