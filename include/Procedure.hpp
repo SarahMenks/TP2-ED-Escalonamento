@@ -14,14 +14,14 @@ class Procedure{
     private:
         float duration;
         int num_units;
-        Unit* units;
+        Unit *units;
     
     public:
         Procedure();
         ~Procedure();
         void Inicialize(float t, int quant);
         void UpdateIdle(int num, float time);
-        void PerformProcedure(Patiant *p);
+        void PerformProcedure(Patiant *p, float system_time);
         int FindEmptyUnit();
         int GetTime();
         void CheckServiceEnded(double const &time);

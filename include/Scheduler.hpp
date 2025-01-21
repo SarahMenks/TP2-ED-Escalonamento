@@ -5,7 +5,7 @@
 #include <ctime>
 
 struct Event{
-    struct tm *event_date;
+    double event_date;
     Patiant *patiant;
 
     Event();
@@ -52,7 +52,7 @@ class Scheduler{
         
         void ShowStatistics();
         bool isEmpty();
-        struct tm GetNextTime();
+        int GetNextTime();
 };
 
 #endif

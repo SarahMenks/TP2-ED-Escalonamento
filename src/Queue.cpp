@@ -1,14 +1,14 @@
 #include "Queue.hpp"
 
-Node_F::Node_F(Patiant *aux){
-    this->p = aux;
-    this->next = nullptr;
-}
-
-void Queue::Initialize(){
+Queue::Queue(){
     this->head = nullptr;
     this->tail = nullptr;
     this->size = 0;
+}
+
+Node_F::Node_F(Patiant *aux){
+    this->p = aux;
+    this->next = nullptr;
 }
 
 void Queue::Enqueue(Patiant *p){
@@ -22,11 +22,12 @@ void Queue::Enqueue(Patiant *p){
         this->tail = nova;
     }
     this->size++;
+    p->status++;
 }
 
-Patiant* Queue::Remove(){
+void Queue::Remove(){
     if (this->size == 0)
-        throw "Fila está vazia!";
+        throw "Erro ao remover, a fila está vazia!";
 
     Node_F *aux = this->head;
     this->head = head->next;
@@ -36,13 +37,14 @@ Patiant* Queue::Remove(){
         this->tail = nullptr; // Atualiza tail quando a fila se torna vazia
     }
 
-    Patiant* patiant = aux->p;
     delete aux;  
-
-    return patiant;
 }
 
 bool Queue::isEmpty(){
     return size == 0; 
 }
 void Queue::Finalize(){}
+
+Patiant* Queue::First(){
+    return this->head->p;
+}

@@ -98,29 +98,27 @@ void PrintStatistics(Patiant *p, int num_patiants){
 void ProcessQueue(Queue &queue, Procedure &procedure, Scheduler &escalonador, double &system_time){
     //passa pela fila de atendimento
     if(queue.isEmpty()){
-        cout << "Fila vazia" << endl;
+        cout << "Nao dá pra processar, a fila está vazia!" << endl;
         return;
     }
     else{
 
         while(!queue.isEmpty()){
-            Patiant *p = nullptr;
             try{
-                p = queue.Remove();
-            } catch(const char* msg) {cerr << msg << endl; continue;}
+                Patiant *p = queue.First();
 
-            p->time_in_queue = system_time - p->out_date->tm_hour;
-            
-            try {
                 if(procedure.FindEmptyUnit() != -1){
-                    procedure.PerformProcedure(p);
-                    system_time = p->out_date->tm_hour;
+                    procedure.PerformProcedure(p, system_time);
+                    escalonador.CreateEvent(p);
+                    queue.Remove();
                 }
+                else if(procedure.FindEmptyUnit() == -1) {
+                    p->time_in_queue = system_time - p->total_time;
+                }
+                system_time = p->total_time;
                 procedure.CheckServiceEnded(system_time);
-            } catch(const char* msg) {
-                cerr << msg << endl;
-                continue;
-            }
+
+            } catch(const char* msg) {cerr << msg << endl; continue;}
         }
     } 
 }
@@ -137,7 +135,7 @@ int main(int argc, char const *argv[]){
     Procedure triagem, atendimento, medhosp, teste, exame, medic;
     Queue high, medium, low;
     int num_patiants;
-    double system_time = 0;
+    double system_time = 0; //horario do sistema, em minutos
 
 
     InitializeProcedures(file, triagem, atendimento, medhosp, teste, exame, medic);
@@ -148,7 +146,7 @@ int main(int argc, char const *argv[]){
     Scheduler escalonador(num_patiants);
 
     InitializePatiants(file, patiants, num_patiants);
-    system_time = mktime(patiants[0].entry_date);
+    system_time = (patiants[0].entry_date->tm_hour*60)+patiants[0].entry_date->tm_min;
 
     //fila de triagem por ordem de chegada, ja que a prioridade é definida depois
     for(int i = 0 ; i < num_patiants ; i++){

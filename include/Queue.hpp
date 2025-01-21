@@ -19,12 +19,13 @@ class Queue{
         int size;
         int wait_time;
 
-    public:
-        void Initialize();
+    public: 
+        Queue();
         void Enqueue(Patiant *p);
-        Patiant* Remove(); //talvez mudar o tipo para retornar o valor do elemento retirado?
+        void Remove(); //talvez mudar o tipo para retornar o valor do elemento retirado?
         bool isEmpty();
         void Finalize();
+        Patiant* First();
 };
 
 #endif
