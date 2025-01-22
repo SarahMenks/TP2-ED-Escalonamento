@@ -161,11 +161,14 @@ int main(int argc, char const *argv[]){
         Patiant *p = escalonador.RemoveNext();
 
         try{
-            if(p->discharge || p->status == DISCHARGE)
+            if(p->discharge || p->status == DISCHARGE){
                 p->PrintStatistics();
+                continue;
+            }
             
-            else if(escalonador.isEmpty()){
-                CheckAndEnqueue(p, high, medium, low);                
+            CheckAndEnqueue(p, high, medium, low);
+
+            if(escalonador.isEmpty()){
                 if(!high.isEmpty()){
                     switch(high.First()->status){
                         case ATTENDANCE_QUEUE:
@@ -252,11 +255,8 @@ int main(int argc, char const *argv[]){
                     default:
                         cout << "Status: " << p->status << endl;
                         throw "Status de processo inválido";
+                    }
                 }
-                }
-            }
-            else{
-                CheckAndEnqueue(p, high, medium, low);
             }
         } catch(const char* msg) {cerr << "Erro: " << msg << endl; continue;}
     }
