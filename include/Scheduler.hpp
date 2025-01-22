@@ -45,7 +45,7 @@ class Scheduler{
 
         void CreateEvent(Patiant *temp);
         void InsertEvent(Event Event);
-        Patiant* RemoveNext();
+        Patiant *RemoveNext();
         int GetParent(int posicao); 
         int GetLeftSucessor(int position);
         int GetRightSucessor(int position);

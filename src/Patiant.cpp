@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <algorithm> //só é usado para remover o \n de uma string, na funcao Print().
 #include "Patiant.hpp"
 
@@ -42,7 +43,7 @@ void Patiant::ConfigDate(int month, int year){
     this->total_time = (entry_date->tm_hour*60) + entry_date->tm_min; //total em minutos
 };
 
-void Patiant::Print(){
+void Patiant::PrintStatistics(){
     struct tm out_date = *this->entry_date;
     out_date.tm_hour = this->total_time/60;
     out_date.tm_min = (int)(this->total_time)%60;
@@ -53,13 +54,13 @@ void Patiant::Print(){
     std::string entry = asctime(this->entry_date); 
     std::string out = asctime(&out_date);
     
-    //funcoes que dependem de <algorithm>
+    //funcoes que dependem de <algorithm>, para remover o \n do final da string
     entry.erase(std::remove(entry.begin(), entry.end(), '\n'), entry.end());
     out.erase(std::remove(out.begin(), out.end(), '\n'), out.end());
 
     //quanto tempo o paciente passou em tratamento e na fila, tirando o horario de entrada
     total_time -= ((entry_date->tm_hour*60) + entry_date->tm_min);
-    
+    std::cout << std::fixed << std::setprecision(1);
     std::cout << this->id << " "
               << entry << " "
               << out << " "

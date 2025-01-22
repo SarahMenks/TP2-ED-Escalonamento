@@ -24,7 +24,7 @@ void Procedure::UpdateIdle(int num, float present_time){
 
 void Procedure::PerformProcedure(Patiant *p, float system_time){
         //ocupa unidade e atualiza tempo de serviço, data de saida e status do paciente
-        int position = FindEmptyUnit();
+        int position = FindEmptyUnit(system_time);
         if (position == -1) {
                 throw "Nenhuma unidade disponível!";
         }
@@ -33,15 +33,16 @@ void Procedure::PerformProcedure(Patiant *p, float system_time){
         
         p->status++;
         p->total_time += (p->GetProcedureTime()*this->duration);
-        //mktime(p->out_date); //formata a data
 
         p->time_in_treatment += (p->GetProcedureTime()*this->duration);
 }
 
-int Procedure::FindEmptyUnit() {
+int Procedure::FindEmptyUnit(double const time) {
         for (int i = 0; i < this->num_units ; i++) {
-            if(this->units[i].isEmpty)
+            if(this->units[i].service_ended < time){
+                CheckServiceEnded(time);
                 return i;
+            }
         }
         return -1; // Nenhuma unidade disponível
 }

@@ -42,10 +42,9 @@ struct Patiant{
         ~Patiant();
         //void Initialize(int id, bool discharge, int year, int month, int day, int hour, int urgency, int hosp_mesures, int tests, int exams, int medications);
         void ConfigDate(int month, int year);
+        void PrintStatistics();
         double GetPatiantTime(int id);
         int GetProcedureTime();
-
-        void Print();
 };
 
 #endif
