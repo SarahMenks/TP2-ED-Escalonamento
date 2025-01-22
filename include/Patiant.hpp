@@ -14,7 +14,7 @@ enum Status{
         TRIAGE_QUEUE = 1,
         TRIAGE = 2,
         ATTENDANCE_QUEUE = 3,
-        ATENDANCE = 4,
+        ATTENDANCE = 4,
         MEDICAL_HOSPITALIZATION_QUEUE = 5,
         MEDICAL_HOSPITALIZATION = 6,
         TEST_QUEUE = 7,

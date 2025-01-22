@@ -166,78 +166,93 @@ int main(int argc, char const *argv[]){
             
             else if(escalonador.isEmpty()){
                 CheckAndEnqueue(p, high, medium, low);                
-                switch(high.First()->status){
-                    case ATENDANCE:
-                        ProcessQueue(high, atendimento, escalonador, system_time);
-                    break;
-                    case MEDICAL_HOSPITALIZATION:
-                        ProcessQueue(high, medhosp, escalonador, system_time);
-                    break;
-                    
-                    case TEST:
-                        ProcessQueue(high, teste, escalonador, system_time);
-                    break;
-                    
-                    case EXAM:
-                        ProcessQueue(high, exame, escalonador, system_time);                    
-                    break;
-                    
-                    case MEDICATION:
-                        ProcessQueue(high, medic, escalonador, system_time);
-                    break;
-                    
-                    default:
-                        cout << p->status << endl;
-                        throw "Status de processo inválido";
+                if(!high.isEmpty()){
+                    switch(high.First()->status){
+                        case ATTENDANCE_QUEUE:
+                            ProcessQueue(high, atendimento, escalonador, system_time);
+                        break;
+                        case MEDICAL_HOSPITALIZATION_QUEUE:
+                            ProcessQueue(high, medhosp, escalonador, system_time);
+                        break;
+                        
+                        case TEST_QUEUE:
+                            ProcessQueue(high, teste, escalonador, system_time);
+                        break;
+                        
+                        case EXAM_QUEUE:
+                            ProcessQueue(high, exame, escalonador, system_time);                    
+                        break;
+                        
+                        case MEDICATION_QUEUE:
+                            ProcessQueue(high, medic, escalonador, system_time);
+                        break;
+                        case DISCHARGE:
+                            p->PrintStatistics();
+                        break;
+                        
+                        default:
+                            cout << p->status << endl;
+                            throw "Status de processo inválido";
+                    }
                 }
-                switch(medium.First()->status){
-                    case ATENDANCE:
+                if(!medium.isEmpty()){
+                    switch(medium.First()->status){
+                    case ATTENDANCE_QUEUE:
                         if(!medium.isEmpty())
                         ProcessQueue(medium, atendimento, escalonador, system_time);
                     break;
-                    case MEDICAL_HOSPITALIZATION:
+                    case MEDICAL_HOSPITALIZATION_QUEUE:
                         ProcessQueue(medium, medhosp, escalonador, system_time);
                     break;
                     
-                    case TEST:
+                    case TEST_QUEUE:
                         ProcessQueue(medium, teste, escalonador, system_time);
                     break;
                     
-                    case EXAM:
+                    case EXAM_QUEUE:
                         ProcessQueue(medium, exame, escalonador, system_time);
                     break;
                     
-                    case MEDICATION:
+                    case MEDICATION_QUEUE:
                         ProcessQueue(medium, medic, escalonador, system_time);
+                    break;
+                    case DISCHARGE:
+                        p->PrintStatistics();
                     break;
                     
                     default:
                         cout << p->status << endl;
                         throw "Status de processo inválido";
                 }
-                switch (low.First()->status){
-                    case ATENDANCE:
+                }
+                if(!low.isEmpty()){
+                    switch (low.First()->status){
+                    case ATTENDANCE_QUEUE:
                         ProcessQueue(low, atendimento, escalonador, system_time);
                     break;
-                    case MEDICAL_HOSPITALIZATION:
+                    case MEDICAL_HOSPITALIZATION_QUEUE:
                         ProcessQueue(low, medhosp, escalonador, system_time);
                     break;
                     
-                    case TEST:
+                    case TEST_QUEUE:
                         ProcessQueue(low, teste, escalonador, system_time);
                     break;
                     
-                    case EXAM:
+                    case EXAM_QUEUE:
                         ProcessQueue(low, exame, escalonador, system_time);
                     break;
                     
-                    case MEDICATION:
+                    case MEDICATION_QUEUE:
                         ProcessQueue(low, medic, escalonador, system_time);
+                    break;
+                    case DISCHARGE:
+                        p->PrintStatistics();
                     break;
                     
                     default:
-                        cout << p->status << endl;
+                        cout << "Status: " << p->status << endl;
                         throw "Status de processo inválido";
+                }
                 }
             }
             else{
