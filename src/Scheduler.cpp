@@ -7,7 +7,7 @@ Event::Event(){
 
 Event::Event(Patiant *temp){
     this->patiant = temp;
-    this->event_date = patiant->out_date;
+    this->event_date = patiant->total_time;
 }
 
 Scheduler::Scheduler(int maxsize){
@@ -99,8 +99,8 @@ bool Scheduler::isEmpty(){
     return this->size == 0;
 }
 
-struct tm Scheduler::GetNextTime(){
-    return *this->heap[0].event_date;
+int Scheduler::GetNextTime(){
+    return this->heap[0].event_date;
 }
 
 /*

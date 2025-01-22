@@ -16,9 +16,11 @@ run:$(EXECUTABLE)
 	./$(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ_FILES)
+	@mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) $(OBJ_FILES) -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -I$(INCLUDE_DIR) -o $@
 
 clean:

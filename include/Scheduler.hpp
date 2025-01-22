@@ -5,7 +5,7 @@
 #include <ctime>
 
 struct Event{
-    struct tm *event_date;
+    double event_date;
     Patiant *patiant;
 
     Event();
@@ -45,14 +45,14 @@ class Scheduler{
 
         void CreateEvent(Patiant *temp);
         void InsertEvent(Event Event);
-        Patiant* RemoveNext();
+        Patiant *RemoveNext();
         int GetParent(int posicao); 
         int GetLeftSucessor(int position);
         int GetRightSucessor(int position);
         
         void ShowStatistics();
         bool isEmpty();
-        struct tm GetNextTime();
+        int GetNextTime();
 };
 
 #endif

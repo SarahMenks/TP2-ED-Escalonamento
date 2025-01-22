@@ -1,37 +1,50 @@
 #include "Queue.hpp"
 
+Queue::Queue(){
+    this->head = nullptr;
+    this->tail = nullptr;
+    this->size = 0;
+}
+
 Node_F::Node_F(Patiant *aux){
     this->p = aux;
     this->next = nullptr;
 }
 
-void Queue::Initialize(){
-    Patiant aux;  //provavelmente tirar
-    Node_F *novo = new Node_F(&aux);
-    this->head->next = novo;
-    this->tail->next = novo;
-}
-
 void Queue::Enqueue(Patiant *p){
     Node_F *nova = new Node_F(p);
-    this->tail->next = nova;
-    this->tail = nova;
+    if(this->size == 0){
+        this->head = nova;
+        this->tail = nova;
+    }
+    else{
+        this->tail->next = nova;
+        this->tail = nova;
+    }
     this->size++;
+    p->status++;
 }
 
-void Queue::Dequeue(){
+void Queue::Remove(){
     if (this->size == 0)
-        throw "Fila está vazia!";
+        throw "Erro ao remover, a fila está vazia!";
 
-    //int item = aux->id;
     Node_F *aux = this->head;
     this->head = head->next;
-    delete aux;
     this->size--;
-    //return item;
+
+    if (this->size == 0){
+        this->tail = nullptr; // Atualiza tail quando a fila se torna vazia
+    }
+
+    delete aux;  
 }
 
 bool Queue::isEmpty(){
     return size == 0; 
 }
 void Queue::Finalize(){}
+
+Patiant* Queue::First(){
+    return this->head->p;
+}

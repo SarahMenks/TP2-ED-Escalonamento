@@ -14,7 +14,7 @@ enum Status{
         TRIAGE_QUEUE = 1,
         TRIAGE = 2,
         ATTENDANCE_QUEUE = 3,
-        ATENDANCE = 4,
+        ATTENDANCE = 4,
         MEDICAL_HOSPITALIZATION_QUEUE = 5,
         MEDICAL_HOSPITALIZATION = 6,
         TEST_QUEUE = 7,
@@ -30,23 +30,21 @@ struct Patiant{
         int id;
         bool discharge;
         struct tm *entry_date;
-        struct tm *out_date = entry_date;
         int urgency; //vai de 0 a 2 (priority)
         int num_hosp_mesures;
         int num_tests;
         int num_exams;
         int num_medications;
         int status = 0; //vai de 0 a 13 (Status)
-        float time_in_queue, time_in_treatment, total_time; 
+        double time_in_queue, time_in_treatment, total_time; 
 
         Patiant();
         ~Patiant();
         //void Initialize(int id, bool discharge, int year, int month, int day, int hour, int urgency, int hosp_mesures, int tests, int exams, int medications);
         void ConfigDate(int month, int year);
-        struct tm GetPatiantTime(int id);
-        int GetQuantProcedure();
-
-        void Print();
+        void PrintStatistics();
+        double GetPatiantTime(int id);
+        int GetProcedureTime();
 };
 
 #endif

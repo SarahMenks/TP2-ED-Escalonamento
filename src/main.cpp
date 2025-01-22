@@ -79,20 +79,51 @@ void CheckAndEnqueue(Patiant *p, Queue &high, Queue &medium, Queue &low){
 //Só se precisar
 void CheckAndDequeue(Patiant *p, Queue &high, Queue &medium, Queue &low){
     if(p->urgency == LOW_PRIORITY)
-        low.Dequeue();
+        low.Remove();
 
     else if(p->urgency == MEDIUM_PRIORITY)
-        medium.Dequeue();
+        medium.Remove();
     
     else if(p->urgency == HIGH_PRIORITY)
-        high.Dequeue();
+        high.Remove();
 }
 
 void PrintStatistics(Patiant *p, int num_patiants){
     //printar estatisticas
     for(int i = 0 ; i < num_patiants ; i++){
-        p[i].Print();
+        p[i].PrintStatistics();
     }
+}
+
+void ProcessQueue(Queue &queue, Procedure &procedure, Scheduler &escalonador, double &system_time){
+    //passa pela fila de atendimento
+    if(queue.isEmpty()){
+        cout << "Nao dá pra processar, a fila está vazia!" << endl;
+        return;
+    }
+    else{
+        while(!queue.isEmpty()){
+            try{
+                Patiant *p = queue.First();
+                
+                //procura uma unidade vazia. Se for o caso, faz o procedimento
+                if(procedure.FindEmptyUnit(system_time) != -1){
+                    procedure.PerformProcedure(p, system_time);
+                    escalonador.InsertEvent(p);
+                    system_time = p->total_time;
+                    queue.Remove();
+                }
+
+                else if(procedure.FindEmptyUnit(system_time) == -1) {
+                    p->time_in_queue++;
+                    p->total_time++; 
+                    system_time++;
+                }
+
+                procedure.CheckServiceEnded(system_time);
+            } catch(const char* msg) {cerr << "Erro:" << msg << endl; continue;}
+        }
+    } 
 }
 
 int main(int argc, char const *argv[]){
@@ -107,7 +138,7 @@ int main(int argc, char const *argv[]){
     Procedure triagem, atendimento, medhosp, teste, exame, medic;
     Queue high, medium, low;
     int num_patiants;
-    struct tm system_time;
+    double system_time = 0; //horario do sistema, em minutos
 
     InitializeProcedures(file, triagem, atendimento, medhosp, teste, exame, medic);
     
@@ -116,49 +147,129 @@ int main(int argc, char const *argv[]){
     Patiant *patiants = new Patiant[num_patiants]();
     Scheduler escalonador(num_patiants);
 
-
     InitializePatiants(file, patiants, num_patiants);
+    system_time = (patiants[0].entry_date->tm_hour*60)+patiants[0].entry_date->tm_min;
 
-    //Escalona a chegada de pacientes (cria os eventos)
+    //fila de triagem por ordem de chegada, ja que a prioridade é definida depois
     for(int i = 0 ; i < num_patiants ; i++){
-        escalonador.CreateEvent(&patiants[i]);
+        high.Enqueue(&patiants[i]);
+    }
+    
+    ProcessQueue(high, triagem, escalonador, system_time);
+
+    while(!(escalonador.isEmpty() && high.isEmpty() && medium.isEmpty() && low.isEmpty())){
+        Patiant *p = escalonador.RemoveNext();
+
+        try{
+            if(p->discharge || p->status == DISCHARGE){
+                p->PrintStatistics();
+                continue;
+            }
+            
+            CheckAndEnqueue(p, high, medium, low);
+
+            if(escalonador.isEmpty()){
+                if(!high.isEmpty()){
+                    switch(high.First()->status){
+                        case ATTENDANCE_QUEUE:
+                            ProcessQueue(high, atendimento, escalonador, system_time);
+                        break;
+                        case MEDICAL_HOSPITALIZATION_QUEUE:
+                            ProcessQueue(high, medhosp, escalonador, system_time);
+                        break;
+                        
+                        case TEST_QUEUE:
+                            ProcessQueue(high, teste, escalonador, system_time);
+                        break;
+                        
+                        case EXAM_QUEUE:
+                            ProcessQueue(high, exame, escalonador, system_time);                    
+                        break;
+                        
+                        case MEDICATION_QUEUE:
+                            ProcessQueue(high, medic, escalonador, system_time);
+                        break;
+                        case DISCHARGE:
+                            p->PrintStatistics();
+                        break;
+                        
+                        default:
+                            cout << p->status << endl;
+                            throw "Status de processo inválido";
+                    }
+                }
+                if(!medium.isEmpty()){
+                    switch(medium.First()->status){
+                    case ATTENDANCE_QUEUE:
+                        if(!medium.isEmpty())
+                        ProcessQueue(medium, atendimento, escalonador, system_time);
+                    break;
+                    case MEDICAL_HOSPITALIZATION_QUEUE:
+                        ProcessQueue(medium, medhosp, escalonador, system_time);
+                    break;
+                    
+                    case TEST_QUEUE:
+                        ProcessQueue(medium, teste, escalonador, system_time);
+                    break;
+                    
+                    case EXAM_QUEUE:
+                        ProcessQueue(medium, exame, escalonador, system_time);
+                    break;
+                    
+                    case MEDICATION_QUEUE:
+                        ProcessQueue(medium, medic, escalonador, system_time);
+                    break;
+                    case DISCHARGE:
+                        p->PrintStatistics();
+                    break;
+                    
+                    default:
+                        cout << p->status << endl;
+                        throw "Status de processo inválido";
+                }
+                }
+                if(!low.isEmpty()){
+                    switch (low.First()->status){
+                    case ATTENDANCE_QUEUE:
+                        ProcessQueue(low, atendimento, escalonador, system_time);
+                    break;
+                    case MEDICAL_HOSPITALIZATION_QUEUE:
+                        ProcessQueue(low, medhosp, escalonador, system_time);
+                    break;
+                    
+                    case TEST_QUEUE:
+                        ProcessQueue(low, teste, escalonador, system_time);
+                    break;
+                    
+                    case EXAM_QUEUE:
+                        ProcessQueue(low, exame, escalonador, system_time);
+                    break;
+                    
+                    case MEDICATION_QUEUE:
+                        ProcessQueue(low, medic, escalonador, system_time);
+                    break;
+                    case DISCHARGE:
+                        p->PrintStatistics();
+                    break;
+                    
+                    default:
+                        cout << "Status: " << p->status << endl;
+                        throw "Status de processo inválido";
+                    }
+                }
+            }
+        } catch(const char* msg) {cerr << "Erro: " << msg << endl; continue;}
     }
 
-    for(int i = 0 ; i < num_patiants ; i++){
-        escalonador.RemoveNext()->Print();
-    }
-
-    // PrintStatistics(patiants, num_patiants);
-
-    // //passa para a fila de triagem
-    // for(int i = 0 ; i < num_patiants ; i++){
-    //     triagem.PerformProcedure(escalonador.RemoveNext());
+    // for(int i=0 ; i < num_patiants ; i++){
+    //     patiants[i].PrintStatistics();
     // }
 
 
-    // //passa pela fila de atendimento
-    // for(int i = 0 ; i < num_patiants ; i++){
-    //     atendimento.PerformProcedure(&patiants[i]);
-        
-    //     if(patiants[i].discharge){
-    //         CheckAndDequeue(&patiants[i], high, medium, low);
-    //     }
-    // }
+    file.close();
 
-    // while(!(escalonador.isEmpty() && high.isEmpty() && medium.isEmpty() && low.isEmpty())){
-    //     Patiant *p = escalonador.RemoveNext();
-    //     system_time = escalonador.GetNextTime();
-
-    //     //checa quem teve alta
-    //    if(p->discharge){ //while?
-    //         Patiant *aux = p;
-    //         p->Print();
-    //         p = escalonador.RemoveNext();
-    //         delete aux;
-    //     }
-        
-    //     CheckAndEnqueue(p, high, medium, low);
-    // }
+    return 0;
+}
 
 //cada Procedure vai ter uma fila
 /*
@@ -182,15 +293,3 @@ Enquanto houver eventos ou filas não vazias
 Fim 
 Gerar relatórios de estatísticas
 */
-
-    
-
-
-    file.close();
-
-    return 0;
-}
-
-
-//time_t t
-//cout << ctime(&t) << endl;

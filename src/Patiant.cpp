@@ -1,4 +1,6 @@
 #include <iostream>
+#include <iomanip>
+#include <algorithm> //só é usado para remover o \n de uma string, na funcao Print().
 #include "Patiant.hpp"
 
 // void Patiant::Initialize(int id, bool alta, int ano, int mes, int dia, int hora, int urgencia, int medidas_hosp, int testes, int exames, int medicamentos){
@@ -20,7 +22,6 @@ Patiant::Patiant(){
     this->id = 0;
     this->discharge = false;
     this->entry_date = new tm;
-    this->out_date = new tm;
     this->urgency = 0;
     this->num_hosp_mesures = 0;
     this->num_tests = 0;
@@ -29,38 +30,50 @@ Patiant::Patiant(){
     this->status = 0;
     this->time_in_queue = 0;
     this->time_in_treatment = 0;
-    this->total_time = 0;
+    this->total_time = 0; //total em minutos
 }
 
 Patiant::~Patiant(){
     delete this->entry_date;
-    delete this->out_date;
 }
 
 void Patiant::ConfigDate(int month, int year){    
     this->entry_date->tm_year = year - 1900;
     this->entry_date->tm_mon = month - 1;
-    this->out_date = this->entry_date;
+    this->total_time = (entry_date->tm_hour*60) + entry_date->tm_min; //total em minutos
 };
 
-void Patiant::Print(){
-    std::mktime(this->entry_date);
-    std::mktime(this->out_date);
-    std::cout << this->id << " "
-              << asctime(this->entry_date) << " "
-              << asctime(this->out_date) << " "
-              << total_time << " "
-              << time_in_treatment << " "
-              << time_in_queue << std::endl;
+void Patiant::PrintStatistics(){
+    struct tm out_date = *this->entry_date;
+    out_date.tm_hour = this->total_time/60;
+    out_date.tm_min = (int)(this->total_time)%60;
+
+    mktime(this->entry_date);
+    mktime(&out_date);
+
+    std::string entry = asctime(this->entry_date); 
+    std::string out = asctime(&out_date);
     
-//tem q olhar o incremento do out_date, pode ser q esteja errado
+    //funcoes que dependem de <algorithm>, para remover o \n do final da string
+    entry.erase(std::remove(entry.begin(), entry.end(), '\n'), entry.end());
+    out.erase(std::remove(out.begin(), out.end(), '\n'), out.end());
+
+    //quanto tempo o paciente passou em tratamento e na fila, tirando o horario de entrada
+    total_time -= ((entry_date->tm_hour*60) + entry_date->tm_min);
+    std::cout << std::fixed << std::setprecision(1);
+    std::cout << this->id << " "
+              << entry << " "
+              << out << " "
+              << (total_time/60) << " "
+              << (time_in_treatment/60) << " "
+              << (time_in_queue/60) << std::endl;
 }
 
-struct tm Patiant::GetPatiantTime(int id){
-    return *this->out_date;
+double Patiant::GetPatiantTime(int id){
+    return this->total_time;
 }
 
- int Patiant::GetQuantProcedure(){
+ int Patiant::GetProcedureTime(){
     //Funcao que retorna quantas vezes o paciente deve realizar o procedimento
     switch (this->status){
         case TRIAGE:
@@ -80,6 +93,7 @@ struct tm Patiant::GetPatiantTime(int id){
             return 0;
     }
  }
+
 
 
 /*quais e quantos procedimentos deve realizar, estado atual e as estatísticas de atendimento do paciente*/
