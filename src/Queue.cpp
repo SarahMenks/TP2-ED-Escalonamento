@@ -1,4 +1,5 @@
 #include "Queue.hpp"
+#include <iostream>
 
 Queue::Queue(){
     this->head = nullptr;
@@ -25,11 +26,14 @@ void Queue::Enqueue(Patiant *p){
     p->status++;
 }
 
-void Queue::Remove(){
-    if (this->size == 0)
+Patiant* Queue::Remove(){
+    if (this->size == 0){
+        std::cout << "Erro ao remover, a fila está vazia!" << std::endl;
         throw "Erro ao remover, a fila está vazia!";
+    }
 
     Node_F *aux = this->head;
+    Patiant *temp = aux->p;
     this->head = head->next;
     this->size--;
 
@@ -38,6 +42,7 @@ void Queue::Remove(){
     }
 
     delete aux;  
+    return temp;
 }
 
 bool Queue::isEmpty(){
@@ -47,4 +52,8 @@ void Queue::Finalize(){}
 
 Patiant* Queue::First(){
     return this->head->p;
+}
+
+int Queue::GetSize(){
+    return this->size;
 }

@@ -22,10 +22,11 @@ class Queue{
     public: 
         Queue();
         void Enqueue(Patiant *p);
-        void Remove(); //talvez mudar o tipo para retornar o valor do elemento retirado?
+        Patiant* Remove(); //talvez mudar o tipo para retornar o valor do elemento retirado?
         bool isEmpty();
         void Finalize();
         Patiant* First();
+        int GetSize();
 };
 
 #endif

@@ -21,7 +21,7 @@ class Procedure{
         ~Procedure();
         void Inicialize(float t, int quant);
         void UpdateIdle(int num, float time);
-        void PerformProcedure(Patiant *p, float system_time);
+        void PerformProcedure(Patiant *p, float timekeeper);
         int FindEmptyUnit(double const time);
         int GetTime();
         void CheckServiceEnded(double const &time);

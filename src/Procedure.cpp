@@ -1,4 +1,5 @@
 #include "Procedure.hpp"
+#include <iostream>
 
 Procedure::Procedure(){
         this->duration = 0;
@@ -22,14 +23,15 @@ void Procedure::UpdateIdle(int num, float present_time){
                 this->units[num].occupied_time += (present_time - this->units[num].service_ended);
 }
 
-void Procedure::PerformProcedure(Patiant *p, float system_time){
+void Procedure::PerformProcedure(Patiant *p, float timekeeper){
         //ocupa unidade e atualiza tempo de serviço, data de saida e status do paciente
-        int position = FindEmptyUnit(system_time);
+        int position = FindEmptyUnit(timekeeper);
         if (position == -1) {
+                std::cout <<"Nenhuma unidade disponível!"; 
                 throw "Nenhuma unidade disponível!";
         }
         this->units[position].isEmpty = false;
-        this->units[position].service_ended = system_time + this->duration;
+        this->units[position].service_ended = timekeeper + this->duration;
         
         p->status++;
         p->total_time += (p->GetProcedureTime()*this->duration);

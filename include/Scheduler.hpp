@@ -11,23 +11,14 @@ struct Event{
     Event();
     Event(Patiant *temp);
 
-    bool operator<(const Event& other) const {
-        if (this->patiant->urgency != other.patiant->urgency) {
+    bool operator < (const Event& other) const {
+        if (this->patiant->urgency != other.patiant->urgency && this->event_date == other.event_date) {
             return this->patiant->urgency > other.patiant->urgency; // Maior urgência tem prioridade
         }
-        // Se a urgência for igual, compara a data
-        if (this->patiant->entry_date->tm_year != other.patiant->entry_date->tm_year) {
-            return this->patiant->entry_date->tm_year < other.patiant->entry_date->tm_year;
+        else if(this->event_date != other.event_date && this->patiant->urgency == other.patiant->urgency) {
+            return this->event_date < other.event_date;
         }
-        if (this->patiant->entry_date->tm_mon != other.patiant->entry_date->tm_mon) {
-            return this->patiant->entry_date->tm_mon < other.patiant->entry_date->tm_mon;
-        }
-        if (this->patiant->entry_date->tm_mday != other.patiant->entry_date->tm_mday) {
-            return this->patiant->entry_date->tm_mday < other.patiant->entry_date->tm_mday;
-        }
-        if (this->patiant->entry_date->tm_hour != other.patiant->entry_date->tm_hour) {
-            return this->patiant->entry_date->tm_hour < other.patiant->entry_date->tm_hour;
-        }
+       
         return false; //são iguais
     }
 };
@@ -43,14 +34,15 @@ class Scheduler{
         Scheduler(int maxsize);
         ~Scheduler();
 
+        void ResizeHeap(int newsize);
         void CreateEvent(Patiant *temp);
         void InsertEvent(Event Event);
         Patiant *RemoveNext();
+        
         int GetParent(int posicao); 
         int GetLeftSucessor(int position);
         int GetRightSucessor(int position);
         
-        void ShowStatistics();
         bool isEmpty();
         int GetNextTime();
 };

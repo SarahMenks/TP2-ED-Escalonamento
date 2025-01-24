@@ -9,25 +9,19 @@
 class System{
     private:
         Procedure triagem, atendimento, medhosp, teste, exame, medic;
-        Scheduler escalonador;
-        Queue high, medium, low;
+        Queue alta, media, baixa;
 
     public:
-        // void InitializeProcedures(triagem, atendimento, medhosp, teste, exame, medic);
+        void SetProcedures(int option, float time, int quant);
+        Procedure* GetProcedure(Patiant *p);
+        Queue* GetQueue(int priority);
 
-        // System();
-        // ~System();
+        bool EmptyQueues();
 
-        void InitializeScheduler(Patiant *p, int num_patiants);
-        bool ProgramEnded();
-
-
-        void SetTriagem(float time, int quant);
-        void SetAtendimento(float time, int quant);
-        void SetMedHosp(float time, int quant);
-        void SetTeste(float time, int quant);
-        void SetExame(float time, int quant);
-        void SetMedic(float time, int quant);
+        void CheckAndEnqueue(Patiant *p);
+        void ProcessQueue(int priority, double &timekeeper, Scheduler &escalonador);
+        void PrintStatistics(Patiant *p, int num_patiants);
+        
 };
 
 

@@ -1,4 +1,5 @@
 #include "Scheduler.hpp"
+#include <iostream>
 
 Event::Event(){
     this->patiant = nullptr;
@@ -19,6 +20,16 @@ Scheduler::~Scheduler(){
     delete[] this->heap;
 }
 
+void Scheduler::ResizeHeap(int newsize) {
+    Event* newheap = new Event[newsize];
+    for (int i = 0; i < this->size; i++) {
+        newheap[i] = this->heap[i];
+    }
+    delete[] this->heap;
+    this->heap = newheap;
+    this->size = newsize;
+}
+
 void Scheduler::CreateEvent(Patiant *temp){
     Event new_event(temp);
     InsertEvent(new_event);
@@ -31,9 +42,11 @@ void Scheduler::InsertEvent(Event e){
 }
 
 Patiant* Scheduler::RemoveNext(){
-    if(this->size == 0)
+    if(this->size == 0){
+        std::cout << "Heap vazio!" << std::endl;
         throw "Heap vazio!";
-    
+    }
+
     Event aux = this->heap[0];
     this->heap[0] = this->heap[this->size-1];
     this->size--;
@@ -42,14 +55,23 @@ Patiant* Scheduler::RemoveNext(){
 }
 
 int Scheduler::GetParent(int position){
+    if(this->size == 1)
+        return 0;
+
     return (position-1)/2;
 }
 
 int Scheduler::GetLeftSucessor(int position){
+    if(this->size == 1)
+        return 0;
+    
     return (position*2)+1;
 }
 
 int Scheduler::GetRightSucessor(int position){
+    if(this->size == 1)
+        return 0;
+    
     return (position*2)+2;
 }
 
@@ -91,10 +113,6 @@ void Scheduler::HighHeapfy(int position){
     }
 }
 
-void Scheduler::ShowStatistics(){
-//Gerar estatisticas
-}
-
 bool Scheduler::isEmpty(){
     return this->size == 0;
 }
@@ -102,11 +120,3 @@ bool Scheduler::isEmpty(){
 int Scheduler::GetNextTime(){
     return this->heap[0].event_date;
 }
-
-/*
-void escalonarPaciente(Unidade& unidade, double momento_atual, double duracao_atendimento) {
-    atualizarOciosidade(unidade, momento_atual);
-    unidade.tempo_ocupado_total += duracao_atendimento;
-    unidade.fim_atendimento = momento_atual + duracao_atendimento;
-}
-*/

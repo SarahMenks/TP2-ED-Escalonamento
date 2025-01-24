@@ -78,7 +78,7 @@ double Patiant::GetPatiantTime(int id){
     switch (this->status){
         case TRIAGE:
             return 1;
-        case ATENDANCE:
+        case ATTENDANCE:
             return 1;
         case MEDICAL_HOSPITALIZATION:
             return num_hosp_mesures;
@@ -89,6 +89,7 @@ double Patiant::GetPatiantTime(int id){
         case MEDICATION:
             return num_medications;
         default:
+            std::cout << "Status (Patiant.cpp) invalido: " << this->status << std::endl;
             throw "Status inválido";
             return 0;
     }
