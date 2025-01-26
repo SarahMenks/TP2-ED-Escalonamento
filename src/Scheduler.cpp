@@ -3,17 +3,23 @@
 
 Event::Event(){
     this->patiant = nullptr;
-    this->event_date = 0;
+    this->event_time = 0;
 }
 
-Event::Event(Patiant *temp){
-    this->patiant = temp;
-    this->event_date = patiant->total_time;
+Event::Event(Patiant *p, double time){
+    this->patiant = p;
+    this->type = p->status;
+    this->event_time = time;
+}
+
+Scheduler::Scheduler(){
+    this->heap = new Event[0];
+    this->size = 0;
 }
 
 Scheduler::Scheduler(int maxsize){
     this->heap = new Event[maxsize];
-    this->size = 0;
+    this->size = maxsize;
 }
 
 Scheduler::~Scheduler(){
@@ -30,20 +36,15 @@ void Scheduler::ResizeHeap(int newsize) {
     this->size = newsize;
 }
 
-void Scheduler::CreateEvent(Patiant *temp){
-    Event new_event(temp);
-    InsertEvent(new_event);
-}
-
-void Scheduler::InsertEvent(Event e){
-    this->heap[this->size] = e;
+void Scheduler::CreateEvent(Patiant *p, double time){
+    Event new_event(p, time);
+    this->heap[this->size] = new_event;
     this->size++;
-    LowHeapfy(this->size-1);    
+    LowHeapfy(this->size-1); 
 }
 
-Patiant* Scheduler::RemoveNext(){
-    if(this->size == 0){
-        std::cout << "Heap vazio!" << std::endl;
+Event Scheduler::RemoveNext(){
+    if(this->size <= 0){
         throw "Heap vazio!";
     }
 
@@ -51,7 +52,7 @@ Patiant* Scheduler::RemoveNext(){
     this->heap[0] = this->heap[this->size-1];
     this->size--;
     HighHeapfy(0);
-    return aux.patiant;
+    return aux;
 }
 
 int Scheduler::GetParent(int position){
@@ -94,6 +95,9 @@ void Scheduler::LowHeapfy(int position){
 }
 
 void Scheduler::HighHeapfy(int position){
+    if(GetLeftSucessor(position) >= this->size || GetRightSucessor(position) >= this->size)
+        return;
+    
     int esq = GetLeftSucessor(position);
     int dir = GetRightSucessor(position);
     int pos_menor = position;
@@ -117,6 +121,6 @@ bool Scheduler::isEmpty(){
     return this->size == 0;
 }
 
-int Scheduler::GetNextTime(){
-    return this->heap[0].event_date;
+Event Scheduler::GetNext(){
+    return this->heap[0];
 }

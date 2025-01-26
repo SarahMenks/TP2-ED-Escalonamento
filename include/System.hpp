@@ -18,8 +18,8 @@ class System{
 
         bool EmptyQueues();
 
-        void CheckAndEnqueue(Patiant *p);
-        void ProcessQueue(int priority, double &timekeeper, Scheduler &escalonador);
+        void CheckAndEnqueue(Patiant *p, double time);
+        void ProcessQueue(int priority, double timekeeper, Scheduler &escalonador);
         void PrintStatistics(Patiant *p, int num_patiants);
         
 };

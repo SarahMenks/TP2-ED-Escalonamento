@@ -37,6 +37,7 @@ struct Patiant{
         int num_medications;
         int status = 0; //vai de 0 a 13 (Status)
         double time_in_queue, time_in_treatment, total_time; 
+        double entry_queue;
 
         Patiant();
         ~Patiant();

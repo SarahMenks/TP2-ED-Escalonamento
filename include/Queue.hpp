@@ -21,8 +21,8 @@ class Queue{
 
     public: 
         Queue();
-        void Enqueue(Patiant *p);
-        Patiant* Remove(); //talvez mudar o tipo para retornar o valor do elemento retirado?
+        void Enqueue(Patiant *p, double time);
+        Patiant* Remove(double timekeeper); //talvez mudar o tipo para retornar o valor do elemento retirado?
         bool isEmpty();
         void Finalize();
         Patiant* First();

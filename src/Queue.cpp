@@ -12,7 +12,7 @@ Node_F::Node_F(Patiant *aux){
     this->next = nullptr;
 }
 
-void Queue::Enqueue(Patiant *p){
+void Queue::Enqueue(Patiant *p, double time){
     Node_F *nova = new Node_F(p);
     if(this->size == 0){
         this->head = nova;
@@ -24,9 +24,10 @@ void Queue::Enqueue(Patiant *p){
     }
     this->size++;
     p->status++;
+    p->entry_queue = time;
 }
 
-Patiant* Queue::Remove(){
+Patiant* Queue::Remove(double timekeeper){
     if (this->size == 0){
         std::cout << "Erro ao remover, a fila está vazia!" << std::endl;
         throw "Erro ao remover, a fila está vazia!";
@@ -40,6 +41,8 @@ Patiant* Queue::Remove(){
     if (this->size == 0){
         this->tail = nullptr; // Atualiza tail quando a fila se torna vazia
     }
+
+    temp->time_in_queue += (timekeeper - temp->entry_queue);
 
     delete aux;  
     return temp;
